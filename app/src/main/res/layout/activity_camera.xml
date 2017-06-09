@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <com.wine9.cameraapplication.widget.CameraSurfaceView
+        android:id="@+id/camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_gravity="bottom"
+        android:onClick="takePicture()"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+</FrameLayout>
