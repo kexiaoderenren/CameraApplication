@@ -5,18 +5,23 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.ImageFormat;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.Image;
+import android.media.ImageReader;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -24,6 +29,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wine9.cameraapplication.widget.AutoFitTextureView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by gaokuncheng on 2017/6/9.
@@ -44,6 +59,31 @@ public class Camera2BasicFragment extends Fragment implements View.OnClickListen
 
     /*** A {@link Handler} for running tasks in the background.*/
     private Handler mBackgroundHandler;
+
+    /*** An {@link ImageReader} that handles still image capture.*/
+    private ImageReader mImageReader;
+
+    /*** This is the output file for our picture.*/
+    private File mFile;
+
+    /**
+     * This a callback object for the {@link ImageReader}. "onImageAvailable" will be called when a
+     * still image is ready to be saved.
+     */
+    private final ImageReader.OnImageAvailableListener mOnImageAvailableListener
+            = new ImageReader.OnImageAvailableListener() {
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        @Override
+        public void onImageAvailable(ImageReader reader) {
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            mFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                    "gao_IMG_"+ timeStamp + ".jpg");
+            Log.d(TAG, mFile.getPath());
+            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
+        }
+
+    };
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -110,9 +150,37 @@ public class Camera2BasicFragment extends Fragment implements View.OnClickListen
                     continue;
                 }
 
+                //获取图片输出的尺寸和预览画面输出的尺寸
+                StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                if (map == null) {
+                    continue;
+                }
+                // For still image captures, we use the largest available size.
+                Size largest = Collections.max(
+                        Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), new CompareSizesByArea());
+                mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
+                        ImageFormat.JPEG, 2);
+                mImageReader.setOnImageAvailableListener(mOnImageAvailableListener, mBackgroundHandler);
+
+
+
+
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    /*** Compares two {@code Size}s based on their areas.*/
+    static class CompareSizesByArea implements Comparator<Size> {
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public int compare(Size lhs, Size rhs) {
+            // We cast here to ensure the multiplications won't overflow
+            return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
+                    (long) rhs.getWidth() * rhs.getHeight());
         }
 
     }
@@ -122,6 +190,48 @@ public class Camera2BasicFragment extends Fragment implements View.OnClickListen
         mBackgroundThread = new HandlerThread("CameraBackground");
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
+    }
+
+    /**
+     * Saves a JPEG {@link Image} into the specified {@link File}.
+     */
+    private static class ImageSaver implements Runnable {
+
+        /*** The JPEG image*/
+        private final Image mImage;
+
+        /*** The file we save the image into.*/
+        private final File mFile;
+
+        public ImageSaver(Image image, File file) {
+            mImage = image;
+            mFile = file;
+        }
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        @Override
+        public void run() {
+            ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
+            byte[] bytes = new byte[buffer.remaining()];
+            buffer.get(bytes);
+            FileOutputStream output = null;
+            try {
+                output = new FileOutputStream(mFile);
+                output.write(bytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                mImage.close();
+                if (null != output) {
+                    try {
+                        output.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
     }
 
     @Override
