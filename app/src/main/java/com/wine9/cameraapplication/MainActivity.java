@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_txt1).setOnClickListener(this);
         findViewById(R.id.btn_txt2).setOnClickListener(this);
         findViewById(R.id.btn_txt3).setOnClickListener(this);
+        findViewById(R.id.btn_txt4).setOnClickListener(this);
+        findViewById(R.id.btn_txt5).setOnClickListener(this);
         int check = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (check == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "权限已经授权！", Toast.LENGTH_SHORT).show();
@@ -49,6 +51,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(MainActivity.this, Camera2Activity.class);
                 startActivity(intent);
                 break;
+            case R.id.btn_txt4:
+                intent = new Intent(MainActivity.this, GoogleCameraActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btn_txt5:
+                intent = new Intent(MainActivity.this, TestActvity.class);
+                startActivity(intent);
         }
     }
 

@@ -26,7 +26,12 @@
         <activity android:name=".IntentCaptureActivity"></activity>
         <activity android:name=".CameraActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".Camera2Activity"  android:screenOrientation="portrait"></activity>
-
+        <activity android:name=".GoogleCameraActivity"
+            android:theme="@style/ActivityTheme"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".TestActvity"
+            android:theme="@style/ActivityTheme"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

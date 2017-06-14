@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="outside_stroke">
+        <attr name="leftX" format="dimension"/>
+        <attr name="rightX" format="dimension"/>
+        <attr name="topY" format="dimension"/>
+        <attr name="bottomY" format="dimension"/>
+        <attr name="gapSizeY" format="dimension"/>
+        <attr name="strokeLineColor" format="color"/>
+        <attr name="strokeLineWidth"/>
+    </declare-styleable>
+</resources>

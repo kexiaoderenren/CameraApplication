@@ -34,4 +34,22 @@
         android:layout_height="48dp"
         android:layout_marginTop="24dp"
         android:text="5.0以上相机应用" />
+
+    <Button
+        android:id="@+id/btn_txt4"
+        android:layout_width="match_parent"
+        android:layout_below="@id/btn_txt3"
+        android:gravity="center"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:text="google相机应用" />
+
+    <Button
+        android:id="@+id/btn_txt5"
+        android:layout_width="match_parent"
+        android:layout_below="@id/btn_txt3"
+        android:gravity="center"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:text="test" />
 </RelativeLayout>
