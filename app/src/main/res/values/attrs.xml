@@ -8,6 +8,6 @@
         <attr name="bottomY" format="dimension"/>
         <attr name="gapSizeY" format="dimension"/>
         <attr name="strokeLineColor" format="color"/>
-        <attr name="strokeLineWidth"/>
+        <attr name="strokeLineWidth"  format="dimension"/>
     </declare-styleable>
 </resources>

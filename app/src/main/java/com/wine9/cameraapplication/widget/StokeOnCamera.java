@@ -1,4 +1,4 @@
-package com.wine9.pssc.view;
+package com.wine9.cameraapplication.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -20,11 +20,10 @@ public class StokeOnCamera extends View {
     private int mScreenWidth;
     private int mScreenHeight;
 
-    private Paint linePaint;
+    private Paint paint;
     private int leftX,topY,rightX,bottomY;
-    private int radius;
     private Context mContext;
-    private Path mTopPath, mBottomPath;
+    private Path mPath;
 
     public StokeOnCamera(Context context) {
         this(context, null);
@@ -42,40 +41,36 @@ public class StokeOnCamera extends View {
     }
 
     private void initViews() {
-        linePaint = new Paint();
-        linePaint.setAntiAlias(true);// 抗锯齿
-        linePaint.setDither(true);// 防抖动
-        linePaint.setColor(Color.WHITE);
-        linePaint.setStrokeWidth(dip2px(mContext, 2));
-        linePaint.setStyle(Paint.Style.STROKE);
+        paint = new Paint();
+        paint.setAntiAlias(true);// 抗锯齿
+        paint.setDither(true);// 防抖动
+        paint.setColor(Color.BLACK);
+        paint.setStrokeWidth(dip2px(mContext, 2));
+        paint.setStyle(Paint.Style.FILL);
 
         leftX = dip2px(mContext, 23);
         rightX = mScreenWidth - leftX;
         topY = dip2px(mContext, 30);
         bottomY = mScreenHeight - dip2px(mContext, 145);
 
-        //画顶部曲线，贝塞尔曲线
-        mTopPath = new Path();
-        mTopPath.moveTo(leftX, topY);
-        mTopPath.quadTo(mScreenWidth/2, dip2px(mContext, 5), rightX, topY);
-
-        //画底部曲线，贝塞尔曲线
-        mBottomPath = new Path();
-        mBottomPath.moveTo(leftX, bottomY);
-        mBottomPath.quadTo(mScreenWidth/2, bottomY+dip2px(mContext, 25), rightX, bottomY);
+        mPath = new Path();
+        mPath.moveTo(leftX, topY);
+        mPath.lineTo(leftX, bottomY); //Left
+        mPath.quadTo(mScreenWidth/2,bottomY+dip2px(mContext, 25), rightX, bottomY); //bottom
+        mPath.lineTo(rightX,topY);  //right
+        mPath.quadTo(mScreenWidth/2, dip2px(mContext, 5), leftX, topY); //top
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));
-        canvas.drawLine(leftX, topY, leftX, bottomY, linePaint);  //左竖线
-        canvas.drawLine(rightX, topY, rightX, bottomY, linePaint);//右竖线
-        //canvas.drawPath();
+        //canvas.drawColor(Color.GRAY, PorterDuff.Mode.SRC_OUT);
+        //paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
+        canvas.drawPath(mPath, paint);
 
-        canvas.drawPath(mTopPath, linePaint);
-        canvas.drawPath(mBottomPath, linePaint);
     }
+
 
     private void getScreenMetrix(Context context) {
         WindowManager WM = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
