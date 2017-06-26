@@ -14,7 +14,7 @@ import com.wine9.cameraapplication.utils.CaptureUtils;
 import java.io.File;
 
 /**
- * Created by gaokuncheng on 2017/6/7.
+ * Created by kexiaoderenren on 2017/6/7.
  */
 public class IntentCaptureActivity  extends AppCompatActivity {
 

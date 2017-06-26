@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by gaokuncheng on 2017/6/7.
+ * Created by kexiaoderenren on 2017/6/7.
  */
 public class CaptureUtils {
 

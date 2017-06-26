@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by gaokuncheng on 2017/6/8.
+ * Created by kexiaoderenren on 2017/6/8.
  */
 public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Callback{
 
@@ -52,53 +52,54 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         initView();
     }
 
+    /**
+     * 设置相机参数
+     * @param camera 相机
+     * @param width 目标宽度
+     * @param height 目标高度
+     */
     private void setCameraParams(Camera camera, int width, int height) {
         Log.i(TAG,"setCameraParams  width="+width+"  height="+height);
+        //返回当前相机设置参数
         Camera.Parameters parameters = camera.getParameters();
-
+        //获取当前相机支持相片大小，并以队列形式返回
         List<Camera.Size> pictureSizeList = parameters.getSupportedPictureSizes();
-//        for (Camera.Size size : pictureSizeList) {
-//            Log.i(TAG, "support picture size.width=" + size.width + "  size.height=" + size.height);
-//        }
-
         /**从列表中选取合适的分辨率*/
         Camera.Size picSize = getProperSize(pictureSizeList, ((float) height / width));
         if (null == picSize) {
-            Log.i(TAG, "null == picSize");
             picSize = parameters.getPictureSize();
         }
         Log.i(TAG, "picSize.width=" + picSize.width + "  picSize.height=" + picSize.height);
 
         float w = picSize.width;
         float h = picSize.height;
+        //设置相片宽度和高度
         parameters.setPictureSize(picSize.width,picSize.height);
         this.setLayoutParams(new FrameLayout.LayoutParams((int) (height*(h/w)), height));
 
+        //获取当前相机支持预览界面大小，并以队列形式返回
         List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
-//        for (Camera.Size size : previewSizeList) {
-//            Log.i(TAG, "previewSizeList size.width=" + size.width + "  size.height=" + size.height);
-//        }
         Camera.Size preSize = getProperSize(previewSizeList, ((float) height) / width);
         if (null != preSize) {
             Log.i(TAG, "preSize.width=" + preSize.width + "  preSize.height=" + preSize.height);
             parameters.setPreviewSize(preSize.width, preSize.height);
         }
-
+        //设置相机拍摄图片质量，数值范围1~100，数值越大图片质量越高
         parameters.setJpegQuality(100);
+        //如果相机支持自动对焦，则开启
         if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
             parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         }
         mCamera.cancelAutoFocus();//自动对焦。
-        mCamera.setDisplayOrientation(90);// 设置PreviewDisplay的方向，效果就是将捕获的画面旋转多少度显示
+        // 设置PreviewDisplay的方向，将捕获的画面旋转多少度显示
+        mCamera.setDisplayOrientation(90);
         mCamera.setParameters(parameters);
-
     }
 
     /**
      * 从列表中选取合适的分辨率
      * 默认w:h = 4:3
-     * <p>注意：这里的w对应屏幕的height
-     *            h对应屏幕的width<p/>
+     * <p>注意：这里的w对应屏幕的height, h对应屏幕的width<p/>
      */
     private Camera.Size getProperSize(List<Camera.Size> pictureSizeList, float screenRatio) {
         Log.i(TAG, "screenRatio=" + screenRatio);

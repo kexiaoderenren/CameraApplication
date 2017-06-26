@@ -59,7 +59,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by gaokuncheng on 2017/6/9.
+ * Created by kexiaoderenren on 2017/6/9.
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class Camera2BasicFragment extends Fragment implements View.OnClickListener {

@@ -8,7 +8,7 @@ import android.view.View;
 import com.wine9.cameraapplication.widget.CameraSurfaceView;
 
 /**
- * Created by gaokuncheng on 2017/6/7.
+ * Created by kexiaoderenren on 2017/6/7.
  */
 public class CameraActivity extends AppCompatActivity{
 

@@ -13,7 +13,7 @@ import android.view.WindowManager;
 
 /**
  * 酒咔嚓扫描————相机相框
- * Created by gaokuncheng on 2017/6/13.
+ * Created by kexiaoderenren on 2017/6/13.
  */
 public class StokeOnCamera extends View {
 

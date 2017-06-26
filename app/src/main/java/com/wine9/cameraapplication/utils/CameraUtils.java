@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 
 /**
- * Created by gaokuncheng on 2017/6/7.
+ * Created by kexiaoderenren on 2017/6/7.
  */
 public class CameraUtils {
 

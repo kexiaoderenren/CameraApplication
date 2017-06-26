@@ -36,7 +36,7 @@ import java.io.OutputStream;
 import java.util.Set;
 
 /**
- * Created by gaokuncheng on 2017/6/13.
+ * Created by kexiaoderenren on 2017/6/13.
  */
 public class GoogleCameraActivity extends AppCompatActivity  implements
         ActivityCompat.OnRequestPermissionsResultCallback, AspectRatioFragment.Listener {
